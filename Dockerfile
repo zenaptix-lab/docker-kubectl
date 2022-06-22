@@ -5,7 +5,7 @@ WORKDIR /opt
 
 USER root
 
-ARG VERSION="stable"
+ARG VERSION="v1.9.11"
 RUN case "$(uname -m)" in \
       x86_64) ARCH="amd64";; \
       aarch64* | arm64 | armv8*) ARCH="arm64";; \
@@ -21,8 +21,6 @@ RUN case "$(uname -m)" in \
     fi && \
     \
     curl -LO https://dl.k8s.io/release/${VERSION}/bin/linux/${ARCH}/kubectl && \
-    curl -LO https://dl.k8s.io/release/${VERSION}/bin/linux/${ARCH}/kubectl.sha256 && \
-    echo "$(cat kubectl.sha256)  kubectl" | sha256sum -c && \
     chmod +x kubectl
 
 ########################################
