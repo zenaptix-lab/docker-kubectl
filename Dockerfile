@@ -5,7 +5,7 @@ WORKDIR /opt
 
 USER root
 
-ARG VERSION="v1.23.8"
+ARG VERSION="v1.23.9"
 RUN case "$(uname -m)" in \
       x86_64) ARCH="amd64";; \
       aarch64* | arm64 | armv8*) ARCH="arm64";; \
