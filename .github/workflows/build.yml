@@ -5,10 +5,6 @@ on:
   schedule:
     - cron: '0 0 * * *'
   push:
-    branches:
-      - '**'
-    tags:
-      - 'v*.*.*'
 
 env:
   IMAGE_NAME: kubectl
@@ -17,6 +13,21 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - tag: latest
+            version: stable
+          - tag: 1.26
+            version: v1.26.1
+          - tag: 1.25
+            version: v1.25.6
+          - tag: 1.24
+            version: v1.24.10
+          - tag: 1.23
+            version: v1.23.16
+          - tag: 1.22
+            version: v1.22.17
     steps:
       - uses: actions/checkout@v3
       - uses: docker/setup-qemu-action@v2
@@ -39,13 +50,8 @@ jobs:
             quay.io/zenlab/${{ env.IMAGE_NAME }}
             ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'master') }}
-            type=raw,value=stable,enable=${{ github.ref == format('refs/heads/{0}', 'master') }}
-            type=schedule
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=${{ matrix.version }}
+            type=raw,value=${{ matrix.tag }}
       - uses: docker/build-push-action@v4
         with:
           platforms: ${{ env.PLATFORMS }}
@@ -53,3 +59,4 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           push: true
           context: .
+          build-args: VERSION=${{ matrix.version }}
