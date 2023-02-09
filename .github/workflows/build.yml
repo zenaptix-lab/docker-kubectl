@@ -3,7 +3,7 @@ name: Build
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: "0 0 * * *"
   push:
 
 env:
@@ -53,6 +53,7 @@ jobs:
             type=raw,value=${{ matrix.version }}
             type=raw,value=${{ matrix.tag }}
       - uses: docker/build-push-action@v4
+        if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'schedule' && matrix.version == 'stable') }}
         with:
           platforms: ${{ env.PLATFORMS }}
           tags: ${{ steps.meta.outputs.tags }}
