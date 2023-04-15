@@ -19,7 +19,7 @@ jobs:
           - tag: latest
             version: stable
           - tag: 1.27
-            version: v1.27.0
+            version: v1.27.1
           - tag: 1.26
             version: v1.26.4
           - tag: 1.25
